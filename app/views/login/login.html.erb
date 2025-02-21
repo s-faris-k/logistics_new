@@ -1,15 +1,11 @@
 <div class="container text-center">
   <div class="row justify-content-center">
-    <div class="col-12">
-      <!-- Logo and Title -->
-      <img src="https://ontash.net/ontashweb_international/static/assets/images/logo.png" />
-      
-      <h1 style="#6c757d">Logistics App</h1>
-    </div>
-    <hr>
     <div class="col-md-4">
-      <div class="card">
+      <div class="card bg-secondary">
         <div class="card-body">
+          <div>
+            <%= image_tag "transportation_logo.jpg", class: "img-fluid" %>
+          </div>
           <%= form_with url: "/user_login", class: "text-start" do |form| %>
             <div class="mb-3">
               <%= form.label :email, "User Name", class: "form-label fw-bold" %>
