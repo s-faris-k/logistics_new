@@ -1,19 +1,21 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  client: one
-  driver: one
+  date: 2025-04-06
   vehicle: one
-  starting: MyString
-  end: MyString
-  start_date: 2025-02-07
-  end_date: 2025-02-07
+  driver: one
+  client: one
+  start_km: MyString
+  end_km: MyString
+  start_loc: MyString
+  end_loc: MyString
 
 two:
-  client: two
-  driver: two
+  date: 2025-04-06
   vehicle: two
-  starting: MyString
-  end: MyString
-  start_date: 2025-02-07
-  end_date: 2025-02-07
+  driver: two
+  client: two
+  start_km: MyString
+  end_km: MyString
+  start_loc: MyString
+  end_loc: MyString

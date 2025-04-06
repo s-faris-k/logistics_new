@@ -4,4 +4,8 @@ class LoginController < ApplicationController
 
   def user_login
   end
+
+  def logout
+    redirect_to root_path
+  end
 end

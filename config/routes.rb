@@ -5,12 +5,15 @@ Rails.application.routes.draw do
   # root "posts#index"
 
   root "login#login"
+  get "logout", to: "login#logout"
+
   namespace :admin do
     get "home", to: "admin#home"
     get "drivers", to: "admin#drivers"
     get "expenses", to: "admin#expenses"
     get "clients", to: "admin#clients"
-    get "trips", to: "admin#vehicles"
+    get "trips", to: "admin#trips"
+    get "vehicles", to: "admin#vehicles"
   end
 
 

@@ -2,8 +2,10 @@
 
 one:
   name: MyString
-  phone: MyString
+  contact: MyString
+  status: false
 
 two:
   name: MyString
-  phone: MyString
+  contact: MyString
+  status: false
