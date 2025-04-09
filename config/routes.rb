@@ -14,7 +14,13 @@ Rails.application.routes.draw do
     get "clients", to: "admin#clients"
     get "trips", to: "admin#trips"
     get "vehicles", to: "admin#vehicles"
+
+    post "add_trip", controller: "admin", action: "add_trip"
+
+    post "add_driver", controller: "admin", action: "add_driver"
+
   end
+
 
 
   get "user_login", to:"login#user_login"
