@@ -17,22 +17,22 @@
     <div class="collapse navbar-collapse justify-content-between" id="navbarNav" style="margin-top: 40px;">
       <ul class="navbar-nav gap-3" style="text-transform: uppercase;font-size: 16px;font-weight:500;">
         <li class="nav-item">
-          <%= link_to "Home", admin_home_path, class: "nav-link active" %>
+          <%= link_to "Home", admin_home_path, class: "nav-link #{'active' if current_page?(admin_home_path)}" %>
         </li>
         <li class="nav-item">
-          <%= link_to "Trips", admin_trips_path, class: "nav-link active" %>
+          <%= link_to "Trips", admin_trips_path, class: "nav-link #{'active' if current_page?(admin_trips_path)}" %>
         </li>
         <li class="nav-item">
-          <%= link_to "Expenses", admin_expenses_path, class: "nav-link active" %>
+          <%= link_to "Expenses", admin_expenses_path, class: "nav-link #{'active' if current_page?(admin_expenses_path)}" %>
         </li>
         <li class="nav-item">
-          <%= link_to "Drivers", admin_drivers_path, class: "nav-link active" %>
+          <%= link_to "Drivers", admin_drivers_path, class: "nav-link #{'active' if current_page?(admin_drivers_path)}" %>
         </li>
         <li class="nav-item">
-          <%= link_to "Clients", admin_clients_path, class: "nav-link active" %>
+          <%= link_to "Clients", admin_clients_path, class: "nav-link #{'active' if current_page?(admin_clients_path)}" %>
         </li>
         <li class="nav-item">
-          <%= link_to "Vehicles", admin_vehicles_path, class: "nav-link active" %>
+          <%= link_to "Vehicles", admin_vehicles_path, class: "nav-link #{'active' if current_page?(admin_vehicles_path)}" %>
         </li>
       </ul>
 

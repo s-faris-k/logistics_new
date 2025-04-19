@@ -1,0 +1,242 @@
+<div class="container pt-3">
+  <!-- Row 1: Today's Trips -->
+  <div class="row shadow mb-4 py-3">
+    <div class="col-12 d-flex justify-content-between align-items-center mb-3">
+      <h1 class="mb-0">Vehicles</h1>
+      <input type="button" value="Add Vehicle" class="btn btn-outline-primary" id="add_trip_btn" data-bs-toggle="modal" data-bs-target="#vehicleModel">
+    </div>
+
+    <div class="col-12 table-responsive">
+      <!-- Table Section -->
+      <table class="table table-borderless table-hover text-center">
+        <thead>
+          <tr>
+            <th scope="col">Model</th>
+            <th scope="col">Reg. Number</th>
+            <th scope="col">Image</th>
+            <th scope="col">Documents</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @vehicles.present? %>
+            <% @vehicles.each_with_index do |veh, index| %>
+              <tr>
+                <td><%= veh.name %></td>
+                <td><%= veh.number %></td>
+                <td>
+                  <% if veh.image.attached? %>
+                    <a href="#" onclick="openImageModal('<%= url_for(veh.image) %>', '<%= admin_delete_veh_image_path(veh_id: veh.id) %>')">
+                      <i class="bi bi-eye text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
+                    </a>
+                  <% else %>
+                    <i class="bi bi-eye-slash text-muted" style="font-size: 1.2rem;" title="No image available"></i>
+                  <% end %>
+                </td>
+                <td>
+                  <% if veh.doc.attached? %>
+                    <a href="#" onclick="openImageModal('<%= url_for(veh.doc) %>', '<%= admin_delete_veh_doc_path(veh_id: veh.id) %>')">
+                      <i class="bi bi-eye text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
+                    </a>
+                  <% else %>
+                    <i class="bi bi-eye-slash text-muted" style="font-size: 1.2rem;" title="No document available"></i>
+                  <% end %>
+                </td>
+                <td>
+                  <% if veh.status %>
+                    <span class="badge bg-success">Active</span>
+                  <% else %>
+                    <span class="badge bg-danger">Inactive</span>
+                  <% end %>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-link text-primary" onclick="edit_vehicle(this)"
+                          data-id="<%= veh.id %>" data-name="<%= veh.name %>" data-reg="<%= veh.number %>" data-status="<%= veh.status %>">
+                    Edit
+                  </button>
+                  <button type="button" class="btn btn-link text-danger" onclick="delete_vehicle(this)"
+                          data-id="<%= veh.id %>" data-name="<%= veh.number %>">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="6" class="text-center">No vehicles found.</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="deleteVehicle" tabindex="-1" role="dialog" aria-labelledby="orderModaldeleteuser" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Vehicle</h5>
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label id="deluser">
+              Are you sure you want to delete the Vehicle :<br><br>
+              <B><span id="vehicle-delete"></span></B>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" id="DEL">OK</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image/PDF Modal -->
+  <div class="modal fade" id="vehicleImageModal" tabindex="-1" aria-labelledby="vehicleImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="vehicleImageModalLabel">Attachment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img id="vehicleImagePreview" src="" class="img-fluid rounded d-none" alt="Vehicle Attachment" />
+          <iframe id="vehiclePdfPreview" src="" class="w-100 d-none" style="height: 500px;" frameborder="0"></iframe>
+        </div>
+        <div class="modal-footer">
+          <form id="deleteImageForm" method="post" data-turbo="false">
+            <input type="hidden" name="_method" value="Delete" />
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vehicle Add/Edit Modal -->
+    <div class="modal fade" id="vehicleModel" tabindex="-1" aria-labelledby="vehicleModelLabel">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="vehiclemodeltitle">New Vehicle</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <%= form_with url: admin_add_vehicle_path, id: "vehicle_form", multipart: true, method: :post do |form| %>
+          <div class="modal-body">
+            <div class="mb-3">
+              <%= form.label :model, "Model" %>
+              <%= form.text_field :model, id: "model", class: "form-control", required: true %>
+            </div>
+            <div class="mb-3">
+              <%= form.label :contact, "Reg. Number" %>
+              <%= form.text_field :reg_number, id: "number", class: "form-control", required: true %>
+            </div>
+            <div class="mb-3">
+              <label class="form-label d-block">Status</label>
+              <div class="form-check form-switch">
+                <%= form.check_box :status, class: "form-check-input", id: "veh_status", onclick: "toggleStatusLabel()" %>
+                <label class="form-check-label ms-2" id="status_label" for="veh_status">Inactive</label>
+              </div>
+            </div>
+            <div class="mb-3">
+              <%= form.label :image, "Image" %>
+              <%= form.file_field :image, class: "form-control", accept: "image/jpeg" %>
+            </div>
+            <div class="mb-3">
+              <%= form.label :document, "Documents" %>
+              <%= form.file_field :doc, class: "form-control", accept: "image/jpeg application/pdf" %>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <%= form.hidden_field :vehicle_id, id: "vehicle_id", class: "form-control", required: true %>
+            <%= form.submit "Save", class: "btn btn-primary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  
+      function delete_vehicle(button) {
+        document.getElementById('vehicle-delete').textContent = button.getAttribute('data-name');
+        const modal = new bootstrap.Modal(document.getElementById('deleteVehicle'));
+        modal.show();
+        document.getElementById('DEL').onclick = function () {
+          window.location = "/admin/delete_vehicle?veh_id=" + button.getAttribute('data-id');
+        };
+      }
+
+      function toggleStatusLabel() {
+        const checkbox = document.getElementById("veh_status");
+        const label = document.getElementById("status_label");
+        label.textContent = checkbox.checked ? "Active" : "Inactive";
+      }
+
+      
+      const vehicleModalEl = document.getElementById('vehicleModel'); // this is the correct element ID
+      const vehicleModal = bootstrap.Modal.getOrCreateInstance(vehicleModalEl); // use correct variable
+
+      document.getElementById('add_trip_btn').addEventListener('click', function () {
+        document.getElementById('model').value = "";
+        document.getElementById('veh_status').checked = true;
+        document.getElementById('status_label').textContent = "Active";
+        document.getElementById('number').value = "";
+        document.getElementById('vehicle_form').setAttribute("action", "/admin/add_vehicle");
+        vehicleModal.show(); // ← You were missing this line!
+      });
+
+      function edit_vehicle(button) {
+        document.getElementById('vehiclemodeltitle').textContent = "Edit Vehicle";
+        document.getElementById('model').value = button.getAttribute('data-name');
+        document.getElementById('number').value = button.getAttribute('data-reg');
+        document.getElementById('vehicle_id').value = button.getAttribute('data-id');
+        
+        const status = button.getAttribute('data-status') === "true";
+        document.getElementById('veh_status').checked = status;
+        document.getElementById('status_label').textContent = status ? "Active" : "Inactive";
+        
+        document.getElementById('vehicle_form').setAttribute("action", "/admin/update_vehicle");
+        vehicleModal.show(); // ← You also missed this line here
+      }
+
+</script>
+<script>
+function openImageModal(fileUrl, deleteUrl) {
+  const imageEl = document.getElementById('vehicleImagePreview');
+  const pdfEl = document.getElementById('vehiclePdfPreview');
+  const deleteForm = document.getElementById('deleteImageForm');
+
+  const isPdf = fileUrl.toLowerCase().endsWith('.pdf');
+
+  // Hide both image and PDF initially
+  imageEl.classList.add('d-none');
+  pdfEl.classList.add('d-none');
+
+  // Check if it's a PDF and update the preview accordingly
+  if (isPdf) {
+    pdfEl.src = fileUrl;
+    pdfEl.classList.remove('d-none');
+  } else {
+    imageEl.src = fileUrl;
+    imageEl.classList.remove('d-none');
+  }
+
+  deleteForm.action = deleteUrl;
+
+  // Initialize and show the modal programmatically
+  const modal = new bootstrap.Modal(document.getElementById('vehicleImageModal'));
+  modal.show();
+}
+
+
+</script>
+

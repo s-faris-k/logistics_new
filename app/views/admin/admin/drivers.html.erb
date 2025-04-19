@@ -4,81 +4,149 @@
   <div class="row shadow mb-4 py-3">
     <div class="col-12 d-flex justify-content-between align-items-center mb-3">
       <h1 class="mb-0">Drivers</h1>
-      <input type="button" value="Add Driver" class="btn btn-outline-primary" id="add_trip_btn" data-bs-toggle="modal" data-bs-target="#TripModel">
+      <input type="button" value="Add Driver" class="btn btn-outline-primary" id="add_driver_btn" data-bs-toggle="modal" data-bs-target="#driverModel">
     </div>
 
     <div class="col-12 table-responsive">
-      <table class="table table-borderless table-hover">
+       <table class="table table-borderless table-hover text-center">
         <thead>
           <tr>
             <th scope="col">Name</th>
             <th scope="col">Contact</th>
-            <th scope="col">Email</th>
             <th scope="col">License</th>
             <th scope="col">ID</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td><input type="checkbox" name="newsletter" value="yes" checked= true ></td>
-            <td><input type="checkbox" name="newsletter" value="yes" checked= true ></td>
-            <td>
-              <a href="#" class="me-2">Edit</a>
-              <a href="#">Delete</a>
-            </td>
-          </tr>
+          <% if @drivers.present? %>
+            <% @drivers.each_with_index do |driver, index| %>
+              <tr>
+                <td><%= driver.name %></td>
+                <td><%= driver.contact %></td>
+                <td>
+                  <% if driver.license_id.attached? %>
+                    <a href="#" onclick="openImageModal('<%= url_for(driver.license_id) %>', '<%= admin_delete_driver_license_path(driver_id: driver.id) %>')">
+                      <i class="bi bi-eye text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
+                    </a>
+                  <% else %>
+                    <i class="bi bi-eye-slash text-muted" style="font-size: 1.2rem;" title="No document available"></i>
+                  <% end %>
+                </td>
+                <td>
+                  <% if driver.photo_id.attached? %>
+                    <a href="#" onclick="openImageModal('<%= url_for(driver.photo_id) %>', '<%= admin_delete_driver_id_path(driver_id: driver.id) %>')">
+                      <i class="bi bi-eye text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
+                    </a>
+                  <% else %>
+                    <i class="bi bi-eye-slash text-muted" style="font-size: 1.2rem;" title="No document available"></i>
+                  <% end %>
+                </td>
+          
+                <td>
+                    <button type="button" class="btn btn-link text-primary" onclick="edit_driver(this)" 
+                            data-id="<%= driver.id %>" data-name="<%= driver.name %>" data-contact="<%= driver.contact %>">
+                        Edit
+                    </button>
+                    <button type="button" class="btn btn-link text-danger" onclick="delete_driver(this)" 
+                            data-id="<%= driver.id %>" data-name="<%= driver.name %>">
+                        Delete
+                    </button>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="6" class="text-center">No Driver Details  found.</td>
+            </tr>
+          <% end %>
         </tbody>
       </table>
     </div>
   </div>
-
 </div>
-<div class="modal fade" id="TripModel" tabindex="-1" aria-labelledby="TripModalLabel" aria-hidden="true">
+
+
+  <div class="modal fade" id="deletedriver" tabindex="-1" role="dialog" aria-labelledby="orderModaldeleteuser" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete driver</h5>
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label id="deluser">
+              Are you sure you want to delete the driver Details :<br><br>
+              <B><span id="driver-delete"></span></B>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" id="DEL">OK</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image/PDF Modal -->
+  <div class="modal fade" id="driverImageModel" tabindex="-1" aria-labelledby="vehicleImageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="vehicleImageModalLabel">Attachment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <img id="vehicleImagePreview" src="" class="img-fluid rounded d-none" alt="Vehicle Attachment" />
+          <iframe id="vehiclePdfPreview" src="" class="w-100 d-none" style="height: 500px;" frameborder="0"></iframe>
+        </div>
+        <div class="modal-footer">
+          <form id="deleteImageForm" method="post" data-turbo="false">
+            <input type="hidden" name="_method" value="Delete" />
+            <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="modal fade" id="driverModel" tabindex="-1" aria-labelledby="TripModalLabel">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="TripModalLabel">Add Driver</h1>
+        <h1 class="modal-title fs-5" id="driverModelTitle">New driver</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <%= form_with url: admin_add_driver_path, id: "trip_form", method: :post do |form| %>
+      <%= form_with url: admin_add_driver_path, id: "driver_form", method: :post do |form| %>
         <div class="modal-body">
-          <%= form.hidden_field :trip_id, id: "trip_id", value: "" %>
+          <%= form.hidden_field :driver_id, id: "driver_id", value: "" %>
 
 
           <div class="mb-3">
             <%= form.label :name, "Name" %>
-            <%= form.number_field :name, class: "form-control", required: true %>
+            <%= form.text_field :name, class: "form-control", required: true ,id: "name" %>
           </div>
-
           <div class="mb-3">
             <%= form.label :contact, "Contact" %>
-            <%= form.text_field :contact, class: "form-control", required: true %>
+            <%= form.text_field :contact, class: "form-control", required: true, id: "contact" %>
           </div>
-
-          <div class="mb-3">
-            <%= form.label :email, "Email" %>
-            <%= form.number_field :email, class: "form-control",required: true %>
-          </div>
-
           <div class="mb-3">
             <%= form.label :license, "License" %>
-            <%= form.file_field :license, class: "form-control", required: true, accept: "image/png, image/jpeg application/pdf" %>
-
+            <%= form.file_field :license, class: "form-control", accept: "image/png, image/jpeg application/pdf" %>
           </div>
           <div class="mb-3">
-            <%= form.label :id_2, "ID 2" %>
-            <%= form.file_field :id_2, class: "form-control",required: true, accept: "image/png, image/jpeg application/pdf" %>
+            <%= form.label :id_doc, "ID" %>
+            <%= form.file_field :id_doc, class: "form-control", accept: "image/png, image/jpeg application/pdf" %>
           </div>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <%= form.submit "Save Trip", class: "btn btn-primary" %>
+          <%= form.submit "Save", class: "btn btn-primary" %>
         </div>
       <% end %>
 
@@ -86,4 +154,58 @@
   </div>
 </div>
 
+<script type="text/javascript">
+  
+      function delete_driver(button) {
+        document.getElementById('driver-delete').textContent = button.getAttribute('data-name');
+        const modal = new bootstrap.Modal(document.getElementById('deletedriver'));
+        modal.show();
+        document.getElementById('DEL').onclick = function () {
+          window.location = "/admin/delete_driver?driver_id=" + button.getAttribute('data-id');
+        };
+      }
 
+      const driverModalEl = document.getElementById('driverModel');
+      const driverModal = bootstrap.Modal.getOrCreateInstance(driverModalEl);
+
+      document.getElementById('add_driver_btn').addEventListener('click', function () {
+        document.getElementById('name').value = "";
+        document.getElementById('contact').value = "";
+        document.getElementById('driver_form').setAttribute("action", "/admin/add_driver");
+        driverModal.show(); // ← THIS WAS MISSING
+      });
+
+      function edit_driver(button) {
+        document.getElementById('driverModelTitle').textContent = "Edit Driver Details";
+        document.getElementById('name').value = button.getAttribute('data-name');
+        document.getElementById('contact').value = button.getAttribute('data-contact');
+        document.getElementById('driver_id').value = button.getAttribute('data-id');
+        document.getElementById('driver_form').setAttribute("action", "/admin/update_driver");
+        driverModal.show(); // ← ALSO MISSING HERE
+      }
+
+</script>
+
+<script type="text/javascript">
+  function openImageModal(fileUrl, deleteUrl) {
+  const imageEl = document.getElementById('vehicleImagePreview');
+  const pdfEl = document.getElementById('vehiclePdfPreview');
+  const deleteForm = document.getElementById('deleteImageForm');
+  const isPdf = fileUrl.toLowerCase().endsWith('.pdf');
+  imageEl.classList.add('d-none');
+  pdfEl.classList.add('d-none');
+
+  // Check if it's a PDF and update the preview accordingly
+  if (isPdf) {
+    pdfEl.src = fileUrl;
+    pdfEl.classList.remove('d-none');
+  } else {
+    imageEl.src = fileUrl;
+    imageEl.classList.remove('d-none');
+  }
+
+  deleteForm.action = deleteUrl;
+  const modal = new bootstrap.Modal(document.getElementById('driverImageModel'));
+  modal.show();
+}
+</script>

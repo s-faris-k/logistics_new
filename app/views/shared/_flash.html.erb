@@ -1,0 +1,36 @@
+<!-- Place this in your view to show toasts -->
+<% if flash[:success] %>
+  <div class="toast align-items-center text-white bg-success border-0 show mx-auto" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        <%= flash.now[:success] %>
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+
+  <script>
+    // Initialize toasts using Bootstrap's JavaScript
+    var successToast = document.querySelector('.toast.bg-success');
+    var successToastList = new bootstrap.Toast(successToast, { autohide: true, delay: 2000 }); // Set delay in milliseconds (e.g., 5000 for 5 seconds)
+    successToastList.show();
+  </script>
+<% end %>
+
+<% if flash[:error] %>
+  <div class="toast align-items-center text-white bg-danger border-0 show mx-auto" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        <%= flash[:error] %>
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+
+  <script>
+    // Initialize toasts using Bootstrap's JavaScript
+    var errorToast = document.querySelector('.toast.bg-danger');
+    var errorToastList = new bootstrap.Toast(errorToast, { autohide: true, delay: 3000 }); // Set delay in milliseconds (e.g., 5000 for 5 seconds)
+    errorToastList.show();
+  </script>
+<% end %>
