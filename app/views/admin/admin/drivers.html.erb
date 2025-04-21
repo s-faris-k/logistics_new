@@ -112,7 +112,7 @@
     </div>
   </div>
 
-<div class="modal fade" id="driverModel" tabindex="-1" aria-labelledby="TripModalLabel">
+<div class="modal fade" id="driverModel" tabindex="-1" aria-labelledby="TripModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
@@ -165,14 +165,15 @@
         };
       }
 
-      const driverModalEl = document.getElementById('driverModel');
-      const driverModal = bootstrap.Modal.getOrCreateInstance(driverModalEl);
 
-      document.getElementById('add_driver_btn').addEventListener('click', function () {
+       document.getElementById('add_driver_btn').addEventListener('click', function () {
         document.getElementById('name').value = "";
         document.getElementById('contact').value = "";
+         document.getElementById('vehicle_id').value = "";
         document.getElementById('driver_form').setAttribute("action", "/admin/add_driver");
-        driverModal.show(); // ← THIS WAS MISSING
+        <%# document.getElementById('driverModel').show(); %>
+        const modal = new bootstrap.Modal(document.getElementById('driverModel'));
+        modal.show();
       });
 
       function edit_driver(button) {
@@ -181,7 +182,8 @@
         document.getElementById('contact').value = button.getAttribute('data-contact');
         document.getElementById('driver_id').value = button.getAttribute('data-id');
         document.getElementById('driver_form').setAttribute("action", "/admin/update_driver");
-        driverModal.show(); // ← ALSO MISSING HERE
+        const modal = new bootstrap.Modal(document.getElementById('driverModel'));
+        modal.show();
       }
 
 </script>
