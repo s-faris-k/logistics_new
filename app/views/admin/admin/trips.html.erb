@@ -23,57 +23,38 @@
           </tr>
         </thead>
         <tbody>
+         <% if @trips.present? %>
+            <% @trips.where.not(trip_status:"Enqueue").each_with_index do |trip, index| %>
           <tr>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>100</td>
-            <td>150</td>
-            <td>50</td>
-            <td>City A</td>
-            <td>City B</td>
+            <td><%= trip.date %></td>
+            <td><%= trip.vehicle.number %></td>
+            <td><%= trip.client.name %></td>
+            <td><%= trip.driver.name %></td>
+            <td><%= trip.start_km %></td>
+            <td><%= trip.end_km %></td>
+            <td><%= trip.start_loc %></td>
+            <td><%= trip.end_loc %></td>
+            <td><%= trip.trip_status %></td>
             <td>
               <a href="#" class="me-2">Edit</a>
               <a href="#">Delete</a>
             </td>
           </tr>
-          <tr>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>90</td>
-            <td>130</td>
-            <td>40</td>
-            <td>City X</td>
-            <td>City Y</td>
-            <td>
-              <a href="#" class="me-2">Edit</a>
-              <a href="#">Delete</a>
-            </td>
-          </tr>
-          <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>@social</td>
-            <td>200</td>
-            <td>250</td>
-            <td>50</td>
-            <td>City Q</td>
-            <td>City R</td>
-            <td>
-              <a href="#" class="me-2">Edit</a>
-              <a href="#">Delete</a>
-            </td>
-          </tr>
+          <% end %>
+          <% else %>
+            <tr>
+              <td colspan="10" class="text-center">No Trip Details Found</td>
+            </tr>
+          <% end %>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- Row 2: Last Week's Trips -->
+  <!-- Row 2: Upcoming Trips -->
   <div class="row shadow mb-4 py-3">
     <div class="col-12 mb-3">
-      <h1>Last Week</h1>
+      <h1>Awaiting Trips</h1>
     </div>
 
     <div class="col-12 table-responsive">
@@ -81,59 +62,94 @@
         <thead>
           <tr>
             <th scope="col">Vehicles</th>
-            <th scope="col">Status</th>
             <th scope="col">Client</th>
+            <th scope="col">Driver</th>
             <th scope="col">Start Km</th>
             <th scope="col">End Km</th>
             <th scope="col">Total Km</th>
             <th scope="col">Start Point</th>
             <th scope="col">End Point</th>
+            <th scope="col">Status</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
-        <tbody>
+         <tbody>
+         <% if @queue_trips.present? %>
+            <% @queue_trips.each_with_index do |trip, index| %>
           <tr>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>110</td>
-            <td>160</td>
-            <td>50</td>
-            <td>City A</td>
-            <td>City B</td>
+            <td><%= trip.date %></td>
+            <td><%= trip.vehicle.number %></td>
+            <td><%= trip.client.name %></td>
+            <td><%= trip.driver.name %></td>
+            <td><%= trip.start_km %></td>
+            <td><%= trip.end_km %></td>
+            <td><%= trip.start_loc %></td>
+            <td><%= trip.end_loc %></td>
+            <td><%= trip.trip_status %></td>
             <td>
               <a href="#" class="me-2">Edit</a>
               <a href="#">Delete</a>
             </td>
           </tr>
+          <% end %>
+          <% else %>
+            <tr>
+              <td colspan="10" class="text-center">No Trip Details Found</td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+  <div class="row shadow mb-4 py-3">
+    <div class="col-12 mb-3">
+      <h1>Previous Trips</h1>
+    </div>
+
+    <div class="col-12 table-responsive">
+      <table class="table table-borderless table-hover">
+        <thead>
           <tr>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            <td>95</td>
-            <td>125</td>
-            <td>30</td>
-            <td>City X</td>
-            <td>City Y</td>
-            <td>
-              <a href="#" class="me-2">Edit</a>
-              <a href="#">Delete</a>
-            </td>
+            <th scope="col">Vehicles</th>
+            <th scope="col">Client</th>
+            <th scope="col">Driver</th>
+            <th scope="col">Start Km</th>
+            <th scope="col">End Km</th>
+            <th scope="col">Total Km</th>
+            <th scope="col">Start Point</th>
+            <th scope="col">End Point</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
           </tr>
-          <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>@social</td>
-            <td>180</td>
-            <td>240</td>
-            <td>60</td>
-            <td>City Q</td>
-            <td>City R</td>
-            <td>
-              <a href="#" class="me-2">Edit</a>
-              <a href="#">Delete</a>
-            </td>
-          </tr>
+        </thead>
+         <tbody>
+          <% if @previus_trips.present? %>
+            <% @trips.each_with_index do |trip, index| %>
+              <tr>
+                <td><%= trip.date %></td>
+                <td><%= trip.vehicle.number %></td>
+                <td><%= trip.client.name %></td>
+                <td><%= trip.driver.name %></td>
+                <td><%= trip.start_km %></td>
+                <td><%= trip.end_km %></td>
+                <td><%= trip.end_km.to_i - trip.start_km.to_i if trip.start_km && trip.end_km %></td>
+                <td><%= trip.start_loc %></td>
+                <td><%= trip.end_loc %></td>
+                <td><%= trip.trip_status %></td>
+                <td>
+                  <a href="<%= edit_trip_path(trip) %>" class="me-2">Edit</a>
+                  <%= link_to "Delete", trip_path(trip), method: :delete, data: { confirm: "Are you sure?" } %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="10" class="text-center">No Trip Details Found</td>
+            </tr>
+          <% end %>
         </tbody>
       </table>
     </div>
@@ -161,39 +177,46 @@
           <!-- Vehicle select -->
           <div class="mb-3">
             <%= form.label :vehicle_id, "Vehicle" %>
-            <%= form.select :vehicle_id, options_from_collection_for_select(@vehicles, :id, :name), { prompt: "Select Vehicle" }, class: "form-control", required: true %>
+              <%= form.select :vehicle_id, 
+                (@vehicles.present? ? @vehicles.map { |v| ["#{v.name} - #{v.number}", v.id] } : [['No vehicles available', nil]]),
+                { prompt: "Select Vehicle" }, 
+                class: "form-control" %>
           </div>
 
           <!-- Driver select -->
           <div class="mb-3">
             <%= form.label :driver_id, "Driver" %>
-            <%= form.select :driver_id, options_from_collection_for_select(@drivers, :id, :name), { prompt: "Select Driver" }, class: "form-control",required: true %>
+           <%= form.select :driver_id, 
+              (@drivers.present? ? options_from_collection_for_select(@drivers, :id, :name) : [['No drivers available', nil]]), 
+              { prompt: "Select Driver" }, 
+              class: "form-control"  %>
+
           </div>
 
           <!-- Client select -->
           <div class="mb-3">
             <%= form.label :client_id, "Client" %>
-            <%= form.select :client_id, options_from_collection_for_select(@clients, :id, :name), { prompt: "Select Client" }, class: "form-control", required: true %>
+            <%= form.select :client_id, options_from_collection_for_select(@clients, :id, :name), { prompt: "Select Client" }, class: "form-control" %>
           </div>
 
           <div class="mb-3">
             <%= form.label :start_km, "Start KM" %>
-            <%= form.number_field :start_km, class: "form-control", required: true %>
+            <%= form.number_field :start_km, class: "form-control" %>
           </div>
 
           <div class="mb-3">
             <%= form.label :start_location, "Start Location" %>
-            <%= form.text_field :start_location, class: "form-control", required: true %>
+            <%= form.text_field :start_location, class: "form-control" %>
           </div>
 
           <div class="mb-3">
             <%= form.label :end_km, "End KM" %>
-            <%= form.number_field :end_km, class: "form-control",required: true %>
+            <%= form.number_field :end_km, class: "form-control" %>
           </div>
 
           <div class="mb-3">
             <%= form.label :end_location, "End Location" %>
-            <%= form.text_field :end_location, class: "form-control",required: true %>
+            <%= form.text_field :end_location, class: "form-control" %>
           </div>
         </div>
 

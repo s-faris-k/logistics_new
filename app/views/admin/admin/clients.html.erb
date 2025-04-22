@@ -154,15 +154,15 @@
       }
 
 
-     const clientModalEl = document.getElementById('clientModel');
-    const clientModal = bootstrap.Modal.getOrCreateInstance(clientModalEl);
 
     document.getElementById('add_client_btn').addEventListener('click', function () {
       document.getElementById('name').value = "";
       document.getElementById('contact').value = "";
       document.getElementById('clientModelTitle').textContent = "New Client";
       document.getElementById('client_form').setAttribute("action", "/admin/add_client");
-      clientModal.show();
+      const modal = new bootstrap.Modal(document.getElementById('clientModel'));
+      modal.show();
+  
     });
 
     function edit_client(button) {
@@ -171,7 +171,9 @@
       document.getElementById('contact').value = button.getAttribute('data-contact');
       document.getElementById('client_id').value = button.getAttribute('data-id');
       document.getElementById('client_form').setAttribute("action", "/admin/update_client");
-      clientModal.show();
+      const modal = new bootstrap.Modal(document.getElementById('clientModel'));
+      modal.show();
+
     }
 </script>
 

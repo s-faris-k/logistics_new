@@ -8,8 +8,44 @@ class Admin::AdminController < ApplicationController
 	def expenses
 	end
 
-	def add_trip
+
+	def trips
+	  @trips = Trip.all
+	  @vehicles = Vehicle.where(status:true)
+	  @drivers = Driver.where(status: true)
+	  @clients = Client.all
+	  @queue_trips = Trip.where(trip_status: "Enqueue")
+	  @previus_trips = Trip.includes(:vehicle, :client, :driver).where.not(date: Date.today)
 	end
+
+	def add_trip
+	  # Capture the parameters
+	  date = params[:date]
+	  vehicle_id = params[:vehicle_id]
+	  driver_id = params[:driver_id]
+	  client_id = params[:client_id]
+	  start_km = params[:start_km]
+	  start_location = params[:start_location]
+	  end_km = params[:end_km]
+	  end_location = params[:end_location]
+	  prev_trip = Trip.where(vehicle_id: vehicle_id).last
+	  if prev_trip && prev_trip.trip_status != "closed"
+	    if Bizlogic.add_trip(date, vehicle_id, driver_id, client_id, nil, start_location, nil, end_location, "Enqueue")
+	      flash[:success] = "New trip added to the queue."
+	    else
+	      flash[:error] = "Unable to add the trip to the queue. Try again later."
+	    end
+	  else
+	    if Bizlogic.add_trip(date, vehicle_id, driver_id, client_id, start_km, start_location, end_km, end_location, "Occupied")
+	      flash[:success] = "Vehicle trip added successfully."
+	    else
+	      flash[:error] = "Unable to add trip details. Try again later."
+	    end
+	  end
+	  redirect_to admin_trips_path
+	end
+
+
 	def drivers
 		@drivers = Driver.all
 	end
@@ -18,7 +54,8 @@ class Admin::AdminController < ApplicationController
 		contact = params[:contact]
 		license = params[:license]
 		id_doc = params[:id_doc]
-		if Bizlogic.add_driver(name,contact,license,id_doc)
+		status = params[:status]
+		if Bizlogic.add_driver(name,contact,license,id_doc,status)
 			flash[:success] = "Vehicle details added "
 		else
 			flash[:error] = "Unable to add details , Try later"
@@ -28,10 +65,11 @@ class Admin::AdminController < ApplicationController
 	def update_driver
 		id = params[:driver_id]
 		name = params[:name]
+		status = params[:status]
 		contact = params[:contact]
 		license = params[:license]
 		id_doc = params[:id_doc]
-		if Bizlogic.update_driver(id,name,contact,license,id_doc)
+		if Bizlogic.update_driver(id,name,contact,license,id_doc,status)
 			flash[:success] = "Vehicle details added "
 		else
 			flash[:error] = "Unable to add details , Try later"
@@ -169,12 +207,7 @@ class Admin::AdminController < ApplicationController
 		redirect_to admin_clients_path
 	end
 
-	def trips
-	  @trips = Trip.all
-	  @vehicles = Vehicle.all
-	  @drivers = Driver.all
-	  @clients = Client.all
-	end
+
 
 
 

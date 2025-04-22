@@ -1,18 +1,51 @@
 module Bizlogic
 
 
+	def self.add_trip(date, vehicle_id, driver_id, client_id, start_km, start_location, end_km, end_location, status)
+	  # Initialize a new trip with the provided parameters
+	  trip = Trip.new(
+	    date: date,
+	    vehicle_id: vehicle_id,
+	    driver_id: driver_id,
+	    client_id: client_id,
+	    start_km: start_km,
+	    start_loc: start_location,
+	    end_km: end_km,
+	    end_loc: end_location,
+	    trip_status: status # Directly assign status passed from controller
+	  )
 
-	def self.add_driver(name,contact,license_id,id_doc)
-		driver = Driver.new(name: name, contact: contact)
+	  # Only assign the trip status based on km values if the trip is not "Enqueue"
+	  if status != "Enqueue"
+	    if start_km.nil?
+	      trip.trip_status = "Occupied"
+	    elsif start_km.present? && end_km.nil?
+	      trip.trip_status = "En-Route"
+	    elsif end_km.present?
+	      trip.trip_status = "Closed"
+	    end
+	  end
+
+	  # Save the new trip and return true or false based on success
+	  if trip.save
+	    return true
+	  else
+	    return false
+	  end
+	end
+
+
+	def self.add_driver(name,contact,license_id,id_doc,status)
+		driver = Driver.new(name: name, contact: contact,status:status)
 		driver.license_id.attach(compress_resize(license_id)) if license_id.present?
 		driver.photo_id.attach(id_doc) if id_doc.present?
 		driver.save
 	end
 
-	def self.update_driver(id,name,contact,license_id,id_doc)
+	def self.update_driver(id,name,contact,license_id,id_doc,status)
 		driver = Driver.find_by_id(id)
 		return false unless driver
-		if driver.update(name: name, contact: contact)
+		if driver.update(name: name, contact: contact,status: status)
 			driver.license_id.attach(compress_resize(license_id)) if license_id.present?
 			driver.photo_id.attach(id_doc) if id_doc.present?
 			true

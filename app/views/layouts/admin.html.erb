@@ -20,13 +20,19 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <body>
-     <%= render partial:"shared/admin_nav" %> 
-     <div class="container mt-3">
-         <%= render partial:"shared/flash" %>
+<body>
+  <div>
+  <%= render partial: "shared/admin_nav" %>
+</div>
+  <!-- Toast container: fixed position to avoid layout shift -->
+<div id="flash_toasts" class="toast-container position-fixed start-50 translate-middle-x z-3" style="top: 110px;">
+  <%= render partial: "shared/flash" %>
+</div>
 
-       </div>
 
+  <!-- Main content -->
+  <div class="container mt-3">
     <%= yield %>
-  </body>
+  </div>
+</body>
 </html>

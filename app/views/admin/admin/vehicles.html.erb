@@ -191,7 +191,8 @@
         document.getElementById('status_label').textContent = "Active";
         document.getElementById('number').value = "";
         document.getElementById('vehicle_form').setAttribute("action", "/admin/add_vehicle");
-        vehicleModal.show(); // ← You were missing this line!
+        const modal = new bootstrap.Modal(document.getElementById('clientModel'));
+      modal.show();
       });
 
       function edit_vehicle(button) {
