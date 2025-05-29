@@ -216,14 +216,14 @@ function openImageModal(fileUrl, deleteUrl) {
   const pdfEl = document.getElementById('vehiclePdfPreview');
   const deleteForm = document.getElementById('deleteImageForm');
 
-  const isPdf = fileUrl.toLowerCase().endsWith('.pdf');
-
-  // Hide both image and PDF initially
+  // Clear src to avoid flash/flicker
+  imageEl.src = '';
+  pdfEl.src = '';
   imageEl.classList.add('d-none');
   pdfEl.classList.add('d-none');
 
-  // Check if it's a PDF and update the preview accordingly
-  if (isPdf) {
+  // Show correct file type
+  if (fileUrl.toLowerCase().endsWith('.pdf')) {
     pdfEl.src = fileUrl;
     pdfEl.classList.remove('d-none');
   } else {
@@ -231,10 +231,12 @@ function openImageModal(fileUrl, deleteUrl) {
     imageEl.classList.remove('d-none');
   }
 
+  // Update delete form action
   deleteForm.action = deleteUrl;
 
-  // Initialize and show the modal programmatically
-  const modal = new bootstrap.Modal(document.getElementById('vehicleImageModal'));
+  // Show modal
+  const modalEl = document.getElementById('vehicleImageModal');
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
   modal.show();
 }
 
