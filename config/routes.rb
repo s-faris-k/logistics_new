@@ -16,7 +16,8 @@ Rails.application.routes.draw do
     get "vehicles", to: "admin#vehicles"
 
     post "add_trip", controller: "admin", action: "add_trip"
-    post "add_driver", controller: "admin", action: "add_driver"
+    get "delete_trip", controller: "admin", action: "delete_trip"
+    # post "add_driver", controller: "admin", action: "add_driver"
 
     ###########################   vehcile
     post "add_vehicle", controller: "admin", action: "add_vehicle"
@@ -36,7 +37,7 @@ Rails.application.routes.draw do
     ######################   drivers
 
 
-    post "add_client", controller: "admin", action: "add_driver"
+    post "add_driver", controller: "admin", action: "add_driver"
     post "update_driver", controller: "admin", action: "update_driver"
     get "delete_driver", controller: "admin", action: "delete_driver"
     delete 'delete_driver_license', controller: "admin", action: "delete_driver_license"

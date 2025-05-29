@@ -14,6 +14,7 @@
             <th scope="col">Vehicles</th>
             <th scope="col">Status</th>
             <th scope="col">Client</th>
+            <th scope="col">Driver</th>
             <th scope="col">Start Km</th>
             <th scope="col">End Km</th>
             <th scope="col">Total Km</th>
@@ -37,7 +38,10 @@
             <td><%= trip.trip_status %></td>
             <td>
               <a href="#" class="me-2">Edit</a>
-              <a href="#">Delete</a>
+              <button type="button" class="btn btn-link text-danger" onclick="delete_trip(this)" 
+                            data-id="<%= trip.id %>" data-name="<%= trip.vehicle.number %>">
+                        Delete
+              </button>
             </td>
           </tr>
           <% end %>
@@ -88,7 +92,10 @@
             <td><%= trip.trip_status %></td>
             <td>
               <a href="#" class="me-2">Edit</a>
-              <a href="#">Delete</a>
+              <button type="button" class="btn btn-link text-danger" onclick="delete_trip(this)" 
+                            data-id="<%= trip.id %>" data-name="<%= trip.vehicle.number %>">
+                        Delete
+              </button>
             </td>
           </tr>
           <% end %>
@@ -140,8 +147,11 @@
                 <td><%= trip.end_loc %></td>
                 <td><%= trip.trip_status %></td>
                 <td>
-                  <a href="<%= edit_trip_path(trip) %>" class="me-2">Edit</a>
-                  <%= link_to "Delete", trip_path(trip), method: :delete, data: { confirm: "Are you sure?" } %>
+                  <a href="#" class="me-2">Edit</a>
+                  <button type="button" class="btn btn-link text-danger" onclick="delete_trip(this)" 
+                                data-id="<%= trip.id %>" data-name="<%= trip.vehicle.number %>">
+                            Delete
+                  </button>
                 </td>
               </tr>
             <% end %>
@@ -231,3 +241,40 @@
 </div>
 
 
+<%# #############################    Delete trip %>
+  <div class="modal fade" id="deleteTrip" tabindex="-1" role="dialog" aria-labelledby="orderModaldeleteuser" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Client</h5>
+          <button type="button" class="btn-close ms-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label id="deluser">
+              Are you sure you want to delete the Trip Details :<br><br>
+              <B><span id="trip-delete"></span></B>
+            </label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" id="DEL">OK</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<%# ##################################################  Javascript %>
+
+<script type="text/javascript">
+  function delete_trip(button) {
+        document.getElementById('trip-delete').textContent = button.getAttribute('data-name');
+        const modal = new bootstrap.Modal(document.getElementById('deleteTrip'));
+        modal.show();
+        document.getElementById('DEL').onclick = function () {
+          window.location = "/admin/delete_trip?trip_id=" + button.getAttribute('data-id');
+        };
+      }
+</script>

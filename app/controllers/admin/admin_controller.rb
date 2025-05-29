@@ -37,12 +37,22 @@ class Admin::AdminController < ApplicationController
 	    end
 	  else
 	    if Bizlogic.add_trip(date, vehicle_id, driver_id, client_id, start_km, start_location, end_km, end_location, "Occupied")
-	      flash[:success] = "Vehicle trip added successfully."
+	      flash[:success] = "Trip details added successfully."
 	    else
 	      flash[:error] = "Unable to add trip details. Try again later."
 	    end
 	  end
 	  redirect_to admin_trips_path
+	end
+
+	def delete_trip
+		trip_id = params[:trip_id]
+		if Trip.find_by_id(trip_id).destroy
+			flash[:success] = "Trip details Removed "
+		else
+			flash[:error] = "Unable to Remove details , Try later"
+		end
+		redirect_to admin_trips_path	
 	end
 
 
@@ -56,7 +66,7 @@ class Admin::AdminController < ApplicationController
 		id_doc = params[:id_doc]
 		status = params[:status]
 		if Bizlogic.add_driver(name,contact,license,id_doc,status)
-			flash[:success] = "Vehicle details added "
+			flash[:success] = "Driver details added "
 		else
 			flash[:error] = "Unable to add details , Try later"
 		end
@@ -70,9 +80,9 @@ class Admin::AdminController < ApplicationController
 		license = params[:license]
 		id_doc = params[:id_doc]
 		if Bizlogic.update_driver(id,name,contact,license,id_doc,status)
-			flash[:success] = "Vehicle details added "
+			flash[:success] = "Driver details saved "
 		else
-			flash[:error] = "Unable to add details , Try later"
+			flash[:error] = "Unable to update details , Try later"
 		end
 		redirect_to admin_drivers_path
 	end
@@ -170,7 +180,7 @@ class Admin::AdminController < ApplicationController
 		contact = params[:contact]
 		doc = params[:doc]
 		if Bizlogic.add_client(name,contact,doc)
-			flash[:success] = "Vehicle details added "
+			flash[:success] = "Client details added "
 		else
 			flash[:error] = "Unable to add details , Try later"
 		end
