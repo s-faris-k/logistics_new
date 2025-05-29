@@ -10,8 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_19_091358) do
-  create_table "active_storage_attachments", charset: "utf8mb4", force: :cascade do |t|
+ActiveRecord::Schema[7.2].define(version: 2025_04_22_200406) do
+  create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.bigint "record_id", null: false
@@ -21,7 +21,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_091358) do
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", charset: "utf8mb4", force: :cascade do |t|
+  create_table "active_storage_blobs", force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
     t.string "content_type"
@@ -33,20 +33,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_091358) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", charset: "utf8mb4", force: :cascade do |t|
+  create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "clients", charset: "utf8mb4", force: :cascade do |t|
+  create_table "clients", force: :cascade do |t|
     t.string "name"
     t.string "contact"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "drivers", charset: "utf8mb4", force: :cascade do |t|
+  create_table "drivers", force: :cascade do |t|
     t.string "name"
     t.string "contact"
     t.boolean "status"
@@ -54,7 +54,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_091358) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "expenditures", charset: "utf8mb4", force: :cascade do |t|
+  create_table "expenditures", force: :cascade do |t|
     t.string "title"
     t.decimal "amount", precision: 10
     t.string "category"
@@ -67,7 +67,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_091358) do
     t.index ["vehicle_id"], name: "index_expenditures_on_vehicle_id"
   end
 
-  create_table "trips", charset: "utf8mb4", force: :cascade do |t|
+  create_table "trips", force: :cascade do |t|
     t.date "date"
     t.bigint "vehicle_id", null: false
     t.bigint "driver_id", null: false
@@ -78,12 +78,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_19_091358) do
     t.string "end_loc"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "trip_status"
     t.index ["client_id"], name: "index_trips_on_client_id"
     t.index ["driver_id"], name: "index_trips_on_driver_id"
     t.index ["vehicle_id"], name: "index_trips_on_vehicle_id"
   end
 
-  create_table "vehicles", charset: "utf8mb4", force: :cascade do |t|
+  create_table "vehicles", force: :cascade do |t|
     t.string "name"
     t.string "number"
     t.boolean "status"
