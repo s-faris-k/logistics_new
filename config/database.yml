@@ -1,6 +1,26 @@
 
 
+# default: &default
+#   adapter: mysql2
+#   encoding: utf8mb4
+#   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+#   username: root
+#   password: root
+#   socket: /var/run/mysqld/mysqld.sock
 
+# development:
+#   <<: *default
+#   database: logistics_development
+
+# test:
+#   <<: *default
+#   database: logistics_test
+
+# production:
+#   <<: *default
+#   database: logistics_prod
+#   username: log_manager
+#   password: <%= ENV["LOGISTICS_APP_DATABASE_PASSWORD"] %>
 
 default: &default
   adapter: mysql2
