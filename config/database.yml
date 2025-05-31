@@ -43,4 +43,4 @@ test:
 
 production:
   <<: *default
-  database: logistics_app
+  database: logistics_app_dev
