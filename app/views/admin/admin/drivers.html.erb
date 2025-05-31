@@ -22,16 +22,16 @@
           <% if @drivers.present? %>
             <% @drivers.each_with_index do |driver, index| %>
               <tr>
-                <td><%= driver.name %></td>
-                <td><%= driver.contact %></td>
-                <td>
+                <td class="text-center align-middle"><%= driver.name %></td>
+                <td class="text-center align-middle"><%= driver.contact %></td>
+                <td class="text-center align-middle">
                   <% if driver.status %>
                     <span class="badge bg-success">Active</span>
                   <% else %>
                     <span class="badge bg-danger">Inactive</span>
                   <% end %>
                 </td>
-                <td>
+                <td class="text-center align-middle">
                   <% if driver.license_id.attached? %>
                     <a href="#" onclick="openImageModal('<%= url_for(driver.license_id) %>', '<%= admin_delete_driver_license_path(driver_id: driver.id) %>')">
                       <i class="bi bi-eye text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
@@ -40,7 +40,7 @@
                     <i class="bi bi-eye-slash text-muted" style="font-size: 1.2rem;" title="No document available"></i>
                   <% end %>
                 </td>
-                <td>
+                <td class="text-center align-middle">
                   <% if driver.photo_id.attached? %>
                     <a href="#" onclick="openImageModal('<%= url_for(driver.photo_id) %>', '<%= admin_delete_driver_id_path(driver_id: driver.id) %>')">
                       <i class="bi bi-eye text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>

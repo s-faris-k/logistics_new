@@ -4,15 +4,14 @@
   <div class="row shadow mb-4 py-3">
     <div class="col-12 d-flex justify-content-between align-items-center mb-3">
       <h1 class="mb-0">Today</h1>
-      <input type="button" value="Add Trip" class="btn btn-outline-primary" id="add_trip_btn" data-bs-toggle="modal" data-bs-target="#TripModel">
+      <input type="button" value="Add Trip" class="btn btn-outline-primary" id="add_trip_btn" data-bs-toggle="modal" data-bs-target="#TripModel" >
     </div>
 
     <div class="col-12 table-responsive">
       <table class="table table-borderless table-hover">
         <thead>
           <tr>
-            <th scope="col">Vehicles</th>
-            <th scope="col">Status</th>
+            <th scope="col">Vehicle</th>
             <th scope="col">Client</th>
             <th scope="col">Driver</th>
             <th scope="col">Start Km</th>
@@ -20,6 +19,7 @@
             <th scope="col">Total Km</th>
             <th scope="col">Start Point</th>
             <th scope="col">End Point</th>
+            <th scope="col">Status</th>
             <th scope="col">Actions</th>
           </tr>
         </thead>
@@ -27,17 +27,21 @@
          <% if @trips.present? %>
             <% @trips.where.not(trip_status:"Enqueue").each_with_index do |trip, index| %>
           <tr>
-            <td><%= trip.date %></td>
-            <td><%= trip.vehicle.number %></td>
-            <td><%= trip.client.name %></td>
-            <td><%= trip.driver.name %></td>
-            <td><%= trip.start_km %></td>
-            <td><%= trip.end_km %></td>
-            <td><%= trip.start_loc %></td>
-            <td><%= trip.end_loc %></td>
-            <td><%= trip.trip_status %></td>
+            <td class="text-center align-middle"><%= trip.vehicle.number %></td>
+            <td class="text-center align-middle"><%= trip.client.name %></td>
+            <td class="text-center align-middle"><%= trip.driver.name %></td>
+            <td class="text-center align-middle"><%= trip.start_km %></td>
+            <td class="text-center align-middle"><%= trip.end_km %></td>
+                        <td><%= trip.start_km && trip.end_km ? (trip.end_km.to_i - trip.start_km.to_i) : "" %></td>
+
+            <td class="text-center align-middle"><%= trip.start_loc %></td>
+            <td class="text-center align-middle"><%= trip.end_loc %></td>
+            <td class="text-center align-middle"><%= trip.trip_status %></td>
             <td>
-              <a href="#" class="me-2">Edit</a>
+               <button type="button" class="btn btn-link text-primary" onclick="edit_trip(this)" 
+                      data-trip='<%= trip.to_json(include: [:vehicle, :client, :driver]) %>'>
+                Edit
+            </button>
               <button type="button" class="btn btn-link text-danger" onclick="delete_trip(this)" 
                             data-id="<%= trip.id %>" data-name="<%= trip.vehicle.number %>">
                         Delete
@@ -65,6 +69,7 @@
       <table class="table table-borderless table-hover">
         <thead>
           <tr>
+            <th scope="col">Date</th>
             <th scope="col">Vehicles</th>
             <th scope="col">Client</th>
             <th scope="col">Driver</th>
@@ -81,17 +86,22 @@
          <% if @queue_trips.present? %>
             <% @queue_trips.each_with_index do |trip, index| %>
           <tr>
-            <td><%= trip.date %></td>
-            <td><%= trip.vehicle.number %></td>
-            <td><%= trip.client.name %></td>
-            <td><%= trip.driver.name %></td>
-            <td><%= trip.start_km %></td>
-            <td><%= trip.end_km %></td>
-            <td><%= trip.start_loc %></td>
-            <td><%= trip.end_loc %></td>
-            <td><%= trip.trip_status %></td>
+            <td class="text-center align-middle"><%= trip.date %></td>
+            <td class="text-center align-middle"><%= trip.vehicle.number %></td>
+            <td class="text-center align-middle"><%= trip.client.name %></td>
+            <td class="text-center align-middle"><%= trip.driver.name %></td>
+            <td class="text-center align-middle"><%= trip.start_km %></td>
+            <td class="text-center align-middle"><%= trip.end_km %></td>
+            <td class="text-center align-middle"><%= trip.start_km && trip.end_km ? (trip.end_km.to_i - trip.start_km.to_i) : "" %></td>
+
+            <td class="text-center align-middle"><%= trip.start_loc %></td>
+            <td class="text-center align-middle"><%= trip.end_loc %></td>
+            <td class="text-center align-middle"><%= trip.trip_status %></td>
             <td>
-              <a href="#" class="me-2">Edit</a>
+            <button type="button" class="btn btn-link text-primary" onclick="edit_trip(this)" 
+                      data-trip='<%= trip.to_json(include: [:vehicle, :client, :driver]) %>'>
+                Edit
+            </button>
               <button type="button" class="btn btn-link text-danger" onclick="delete_trip(this)" 
                             data-id="<%= trip.id %>" data-name="<%= trip.vehicle.number %>">
                         Delete
@@ -136,18 +146,21 @@
           <% if @previus_trips.present? %>
             <% @trips.each_with_index do |trip, index| %>
               <tr>
-                <td><%= trip.date %></td>
-                <td><%= trip.vehicle.number %></td>
-                <td><%= trip.client.name %></td>
-                <td><%= trip.driver.name %></td>
-                <td><%= trip.start_km %></td>
-                <td><%= trip.end_km %></td>
-                <td><%= trip.end_km.to_i - trip.start_km.to_i if trip.start_km && trip.end_km %></td>
-                <td><%= trip.start_loc %></td>
-                <td><%= trip.end_loc %></td>
-                <td><%= trip.trip_status %></td>
+                <td class="text-center align-middle"><%= trip.date %></td>
+                <td class="text-center align-middle"><%= trip.vehicle.number %></td>
+                <td class="text-center align-middle"><%= trip.client.name %></td>
+                <td class="text-center align-middle"><%= trip.driver.name %></td>
+                <td class="text-center align-middle"><%= trip.start_km %></td>
+                <td class="text-center align-middle"><%= trip.end_km %></td>
+                <td class="text-center align-middle"><%= trip.end_km.to_i - trip.start_km.to_i if trip.start_km && trip.end_km %></td>
+                <td class="text-center align-middle"><%= trip.start_loc %></td>
+                <td class="text-center align-middle"><%= trip.end_loc %></td>
+                <td class="text-center align-middle"><%= trip.trip_status %></td>
                 <td>
-                  <a href="#" class="me-2">Edit</a>
+                  <button type="button" class="btn btn-link text-primary" onclick="edit_trip(this)" 
+                          data-trip='<%= trip.to_json(include: [:vehicle, :client, :driver]) %>'>
+                    Edit
+                  </button>
                   <button type="button" class="btn btn-link text-danger" onclick="delete_trip(this)" 
                                 data-id="<%= trip.id %>" data-name="<%= trip.vehicle.number %>">
                             Delete
@@ -182,7 +195,7 @@
           <%= form.hidden_field :trip_id, id: "trip_id", value: "" %>
           <div class="mb-3">
             <%= form.label :Date, "Date" %>
-            <%= form.date_field :date, class: "form-control", value: Date.today %>
+            <%= form.date_field :date, class: "form-control", id: "trip_date", value: Date.today %>
           </div>
           <!-- Vehicle select -->
           <div class="mb-3">
@@ -190,7 +203,7 @@
               <%= form.select :vehicle_id, 
                 (@vehicles.present? ? @vehicles.map { |v| ["#{v.name} - #{v.number}", v.id] } : [['No vehicles available', nil]]),
                 { prompt: "Select Vehicle" }, 
-                class: "form-control" %>
+                class: "form-control",id: "vehicle_id" %>
           </div>
 
           <!-- Driver select -->
@@ -199,34 +212,34 @@
            <%= form.select :driver_id, 
               (@drivers.present? ? options_from_collection_for_select(@drivers, :id, :name) : [['No drivers available', nil]]), 
               { prompt: "Select Driver" }, 
-              class: "form-control"  %>
+              class: "form-control", id: "driver_id"  %>
 
           </div>
 
           <!-- Client select -->
           <div class="mb-3">
             <%= form.label :client_id, "Client" %>
-            <%= form.select :client_id, options_from_collection_for_select(@clients, :id, :name), { prompt: "Select Client" }, class: "form-control" %>
+            <%= form.select :client_id, options_from_collection_for_select(@clients, :id, :name), { prompt: "Select Client" }, class: "form-control", id:"client_id" %>
           </div>
 
           <div class="mb-3">
             <%= form.label :start_km, "Start KM" %>
-            <%= form.number_field :start_km, class: "form-control" %>
+            <%= form.number_field :start_km, class: "form-control", id: "start_km" %>
           </div>
 
           <div class="mb-3">
             <%= form.label :start_location, "Start Location" %>
-            <%= form.text_field :start_location, class: "form-control" %>
+            <%= form.text_field :start_location, class: "form-control", id: "start_loc" %>
           </div>
 
           <div class="mb-3">
             <%= form.label :end_km, "End KM" %>
-            <%= form.number_field :end_km, class: "form-control" %>
+            <%= form.number_field :end_km, class: "form-control", id: "end_km" %>
           </div>
 
           <div class="mb-3">
             <%= form.label :end_location, "End Location" %>
-            <%= form.text_field :end_location, class: "form-control" %>
+            <%= form.text_field :end_location, class: "form-control", id: "end_loc" %>
           </div>
         </div>
 
@@ -277,4 +290,33 @@
           window.location = "/admin/delete_trip?trip_id=" + button.getAttribute('data-id');
         };
       }
+
+
+  const tripmodelEL = document.getElementById('TripModel'); // this is the correct element ID
+  const tripmodel = bootstrap.Modal.getOrCreateInstance(tripmodelEL); // use correct variable
+function edit_trip(button) {
+  const tripData = JSON.parse(button.dataset.trip);
+  console.log(tripData);
+
+  document.getElementById('trip_id').value = tripData.id;
+  document.getElementById('trip_date').value = new Date(tripData.date).toISOString().split('T')[0];
+  document.getElementById('vehicle_id').value = tripData.vehicle_id;
+  document.getElementById('driver_id').value = tripData.driver_id;
+  document.getElementById('client_id').value = tripData.client_id;
+  document.getElementById('start_km').value = tripData.start_km;
+  document.getElementById('end_km').value = tripData.end_km;
+  document.getElementById('start_loc').value = tripData.start_location || "";
+  document.getElementById('end_loc').value = tripData.end_location || "";
+
+  document.getElementById('TripModalLabel').innerText = "Edit Trip";
+  document.getElementById('trip_form').setAttribute("action", "/admin/update_trip");
+
+  const tripmodelEL = document.getElementById('TripModel');
+  const tripmodel = bootstrap.Modal.getOrCreateInstance(tripmodelEL);
+  tripmodel.show();
+}
+
+
+
+
 </script>

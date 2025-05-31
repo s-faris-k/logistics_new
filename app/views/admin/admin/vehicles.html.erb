@@ -3,7 +3,7 @@
   <div class="row shadow mb-4 py-3">
     <div class="col-12 d-flex justify-content-between align-items-center mb-3">
       <h1 class="mb-0">Vehicles</h1>
-      <input type="button" value="Add Vehicle" class="btn btn-outline-primary" id="add_trip_btn" data-bs-toggle="modal" data-bs-target="#vehicleModel">
+      <input type="button" value="Add Vehicle" class="btn btn-outline-primary" id="add_vehicle_button" data-bs-toggle="modal" data-bs-target="#vehicleModel">
     </div>
 
     <div class="col-12 table-responsive">
@@ -23,9 +23,9 @@
           <% if @vehicles.present? %>
             <% @vehicles.each_with_index do |veh, index| %>
               <tr>
-                <td><%= veh.name %></td>
-                <td><%= veh.number %></td>
-                <td>
+                <td class="text-center align-middle"><%= veh.name %></td>
+                <td class="text-center align-middle"><%= veh.number %></td>
+                <td class="text-center align-middle">
                   <% if veh.image.attached? %>
                     <a href="#" onclick="openImageModal('<%= url_for(veh.image) %>', '<%= admin_delete_veh_image_path(veh_id: veh.id) %>')">
                       <i class="bi bi-eye text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
@@ -34,7 +34,7 @@
                     <i class="bi bi-eye-slash text-muted" style="font-size: 1.2rem;" title="No image available"></i>
                   <% end %>
                 </td>
-                <td>
+                <td class="text-center align-middle">
                   <% if veh.doc.attached? %>
                     <a href="#" onclick="openImageModal('<%= url_for(veh.doc) %>', '<%= admin_delete_veh_doc_path(veh_id: veh.id) %>')">
                       <i class="bi bi-eye text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
@@ -43,14 +43,14 @@
                     <i class="bi bi-eye-slash text-muted" style="font-size: 1.2rem;" title="No document available"></i>
                   <% end %>
                 </td>
-                <td>
+                <td class="text-center align-middle">
                   <% if veh.status %>
                     <span class="badge bg-success">Active</span>
                   <% else %>
                     <span class="badge bg-danger">Inactive</span>
                   <% end %>
                 </td>
-                <td>
+                <td class="text-center align-middle">
                   <button type="button" class="btn btn-link text-primary" onclick="edit_vehicle(this)"
                           data-id="<%= veh.id %>" data-name="<%= veh.name %>" data-reg="<%= veh.number %>" data-status="<%= veh.status %>">
                     Edit
@@ -185,7 +185,7 @@
       const vehicleModalEl = document.getElementById('vehicleModel'); // this is the correct element ID
       const vehicleModal = bootstrap.Modal.getOrCreateInstance(vehicleModalEl); // use correct variable
 
-      document.getElementById('add_trip_btn').addEventListener('click', function () {
+      document.getElementById('add_vehicle_button').addEventListener('click', function () {
         document.getElementById('model').value = "";
         document.getElementById('veh_status').checked = true;
         document.getElementById('status_label').textContent = "Active";

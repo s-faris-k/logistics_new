@@ -20,9 +20,9 @@
           <% if @clients.present? %>
             <% @clients.each_with_index do |client, index| %>
               <tr>
-                <td><%= client.name %></td>
-                <td><%= client.contact %></td>
-                <td>
+                <td class="text-center align-middle"><%= client.name %></td>
+                <td class="text-center align-middle"><%= client.contact %></td>
+                <td class="text-center align-middle">
                   <% if client.doc.attached? %>
                     <a href="#" onclick="openImageModal('<%= url_for(client.doc) %>', '<%= admin_delete_client_doc_path(veh_id: client.id) %>')">
                       <i class="bi bi-eye text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
@@ -32,7 +32,7 @@
                   <% end %>
                 </td>
           
-                <td>
+                <td class="text-center align-middle">
                     <button type="button" class="btn btn-link text-primary" onclick="edit_client(this)" 
                             data-id="<%= client.id %>" data-name="<%= client.name %>" data-contact="<%= client.contact %>">
                         Edit
